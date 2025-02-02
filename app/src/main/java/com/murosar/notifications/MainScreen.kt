@@ -1,9 +1,7 @@
 package com.murosar.notifications
 
-import android.Manifest
 import android.content.Context
 import android.os.Build
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,8 +11,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,28 +25,6 @@ fun MainScreen(
     askPermission: () -> Unit,
     notificationLauncher: () -> Unit,
 ) {
-//    val context = LocalContext.current
-//    val permissionState = remember { mutableStateOf(isNotificationPermissionGranted(context)) }
-
-//    val launcher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.RequestPermission()
-//    ) { isGranted ->
-//        permissionState.value = isGranted
-//    }
-//
-//    LaunchedEffect(Unit) {
-//        val observer = object : ContentObserver(Handler(Looper.getMainLooper())) {
-//            override fun onChange(selfChange: Boolean) {
-//                permissionState.value = isNotificationPermissionGranted(context)
-//            }
-//        }
-//        context.contentResolver.registerContentObserver(
-//            Settings.Secure.getUriFor("enabled_notification_listeners"),
-//            true,
-//            observer
-//        )
-//    }
-
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -105,10 +79,22 @@ fun isNotificationPermissionGranted(context: Context): Boolean {
 
 @Preview(showBackground = true)
 @Composable
-fun MainScreenPreview() {
+fun MainScreenWithPermissionGrantedPreview() {
     NotificationsTheme {
         MainScreen(
             permissionState = true,
+            askPermission = {},
+            notificationLauncher = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MainScreenWithoutPermissionGrantedPreview() {
+    NotificationsTheme {
+        MainScreen(
+            permissionState = false,
             askPermission = {},
             notificationLauncher = {},
         )

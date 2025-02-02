@@ -4,7 +4,10 @@ import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.graphics.Color
@@ -75,10 +78,18 @@ class MainActivity : ComponentActivity() {
                             }
                         },
                         notificationLauncher = {
-                            notificationManager.notify(NOTIFICATION_ID, notification)
+                            val notificationId = System.currentTimeMillis().toInt() // To be able to have several notifications at the
+                            // same time
+                            notificationManager.notify(notificationId, notification)
                         })
                 }
             }
+        }
+
+        val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent = TaskStackBuilder.create(this).run {
+            addNextIntentWithParentStack(intent)
+            getPendingIntent(0, PendingIntent.FLAG_MUTABLE)
         }
 
         createNotificationChannel()
@@ -87,6 +98,8 @@ class MainActivity : ComponentActivity() {
             .setContentText("My notification content text")
             .setSmallIcon(R.drawable.baseline_stars_24)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true) //To close the notification after tap on it
             .build()
 
         notificationManager = NotificationManagerCompat.from(this)
@@ -108,6 +121,5 @@ class MainActivity : ComponentActivity() {
     companion object {
         private val CHANNEL_ID = "CHANNEL_ID"
         private val CHANNEL_NAME = "CHANNEL_NAME"
-        private val NOTIFICATION_ID = 0
     }
 }
